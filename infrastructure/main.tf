@@ -17,6 +17,7 @@ terraform {
 
 provider "github" {
   owner = "lancelotp"
+  token = var.GH_TOKEN
 }
 
 resource "github_repository" "this" {
