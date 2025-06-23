@@ -7,74 +7,8 @@ on:
     paths:
       - 'infrastructure/**'
 
-env:
-  TF_CLOUD_ORGANIZATION: 'LancelotPOrg'
-  TF_API_TOKEN: '${{ secrets.TF_API_TOKEN }}'
-  TF_WORKSPACE: 'github_workspace'
-  CONFIG_DIRECTORY: './infrastructure'
-
 jobs:
-  terraform-global:
-    name: 'Terraform Plan - Global'
-    runs-on: ubuntu-latest
-    permissions:
-      # so GitHub can check out this repo using the default github.token
-      contents: read
-      pull-requests: write
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.TF_API_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Terraform Plan Global
-        uses: dflook/terraform-plan@v2.1.0
-
-        with:
-          path: ./infrastructure/environments/global
-          workspace: global
-          label: Global
-          variables: |
-            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
-
-  terraform-env:
-    name: 'Terraform Plan - ${{ matrix.environment }}'
-    runs-on: ubuntu-latest
-    permissions:
-      # so GitHub can check out this repo using the default github.token
-      contents: read
-      pull-requests: write
-
-    strategy:
-      matrix:
-        include:
-          - environment: production
-            workspace: production
-            path: ./infrastructure/environments/production
-            label: Production
-          # - environment: staging
-          #   workspace: staging
-          #   path: ./infrastructure/environments/staging
-          #   label: Staging
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.TF_API_TOKEN }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Terraform Plan ${{ matrix.label }}
-        uses: dflook/terraform-plan@v2.1.0
-
-        with:
-          path: ${{ matrix.path }}
-          workspace: ${{ matrix.workspace }}
-          label: ${{ matrix.label }}
-          variables: |
-            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
-            scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
-            scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
-            scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
+  terraform-plan:
+    uses: ./.github/workflows/terraform-actions.yml
+    with:
+      action: plan

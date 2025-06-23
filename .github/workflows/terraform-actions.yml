@@ -1,0 +1,106 @@
+name: 'Terraform Reusable Actions Workflow'
+
+on:
+  workflow_call:
+    inputs:
+      action:
+        required: true
+        type: string
+        description: 'Action to perform: plan or apply'
+
+env:
+  TF_CLOUD_ORGANIZATION: 'LancelotPOrg'
+  TF_API_TOKEN: '${{ secrets.TF_API_TOKEN }}'
+
+jobs:
+  terraform-global:
+    name: 'Terraform ${{ inputs.action }} - Global'
+    runs-on: ubuntu-latest
+
+    permissions:
+      # so GitHub can check out this repo using the default github.token
+      contents: read
+      pull-requests: write
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.TF_API_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Plan Global
+        if: inputs.action == 'plan'
+        uses: dflook/terraform-plan@v2.1.0
+        with:
+          path: ./infrastructure/environments/global
+          workspace: global
+          label: Global
+          variables: |
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+
+      - name: Terraform Apply Global
+        if: inputs.action == 'apply'
+        uses: dflook/terraform-apply@v2.1.0
+        with:
+          path: ./infrastructure/environments/global
+          workspace: global
+          label: Global
+          variables: |
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+
+  terraform-env:
+    name: 'Terraform ${{ inputs.action }} - ${{ matrix.environment }}'
+    runs-on: ubuntu-latest
+
+    permissions:
+      # so GitHub can check out this repo using the default github.token
+      contents: read
+      pull-requests: write
+
+    strategy:
+      matrix:
+        include:
+          - environment: production
+            workspace: production
+            path: ./infrastructure/environments/production
+            label: Production
+          # - environment: staging
+          #   workspace: staging
+          #   path: ./infrastructure/environments/staging
+          #   label: Staging
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.TF_API_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Plan ${{ matrix.label }}
+        if: inputs.action == 'plan'
+        uses: dflook/terraform-plan@v2.1.0
+        with:
+          path: ${{ matrix.path }}
+          workspace: ${{ matrix.workspace }}
+          label: ${{ matrix.label }}
+          variables: |
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
+            scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
+            scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
+
+      - name: Terraform Apply ${{ matrix.label }}
+        if: inputs.action == 'apply'
+        uses: dflook/terraform-apply@v2.1.0
+        with:
+          path: ${{ matrix.path }}
+          workspace: ${{ matrix.workspace }}
+          label: ${{ matrix.label }}
+          variables: |
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
+            scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
+            scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
