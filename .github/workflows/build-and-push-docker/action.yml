@@ -22,10 +22,13 @@ inputs:
     type: string
     description: 'The name of the application to build and push (api, web)'
 
+outputs:
+  registry_image:
+    description: 'The registry image to deploy'
+    value: ${{ inputs.registry_endpoint }}/${{ inputs.image_name }}:${{ github.sha }}
+
 runs:
   using: 'composite'
-  outputs:
-    registry_image: ${{ steps.build-and-push-docker.outputs.registry_image }}
   steps:
     - uses: pnpm/action-setup@v4
       name: Install pnpm
@@ -57,8 +60,6 @@ runs:
 
     - name: Build Docker Image
       uses: docker/build-push-action@v6
-      outputs:
-        registry_image: ${{ inputs.registry_endpoint }}/${{ inputs.image_name }}:${{ github.sha }}
       with:
         context: .
         file: apps/${{ inputs.app_name }}/Dockerfile
