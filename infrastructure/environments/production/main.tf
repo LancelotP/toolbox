@@ -33,9 +33,9 @@ provider "github" {
 provider "scaleway" {
   region          = "fr-par"
   zone            = "fr-par-1"
-  access_key      = var.access_key
-  secret_key      = var.secret_key
-  organization_id = var.organization_id
+  access_key      = var.swc_access_key
+  secret_key      = var.swc_secret_key
+  organization_id = var.swc_organization_id
 }
 
 module "scaleway_env" {
