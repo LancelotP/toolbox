@@ -64,13 +64,6 @@ resource "scaleway_container" "api" {
   min_scale   = 0
   max_scale   = 1
   http_option = "redirected"
-  health_check {
-    failure_threshold = 3
-    interval          = "10s"
-    http {
-      path = "/api"
-    }
-  }
 
   cpu_limit    = 100
   memory_limit = 128
