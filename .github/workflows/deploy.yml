@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - chore/container-api-deployment
   release:
     types:
       - published
