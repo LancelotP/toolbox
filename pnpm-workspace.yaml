@@ -1,2 +1,6 @@
-packages: 
-  - "packages/*"
+packages:
+  - packages/*
+  - apps/*
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@parcel/watcher'
