@@ -15,7 +15,7 @@ resource "github_repository_environment" "environment" {
 resource "github_actions_environment_variable" "web_registry_endpoint" {
   environment   = github_repository_environment.environment.environment
   repository    = github_repository_environment.environment.repository
-  variable_name = "SWC_WEB_REGISTRY_ENDPOINT"
+  variable_name = "SCW_WEB_REGISTRY_ENDPOINT"
   value         = var.web_registry_endpoint
 }
 

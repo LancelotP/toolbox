@@ -1,14 +1,14 @@
-variable "swc_access_key" {
+variable "scw_access_key" {
   type      = string
   sensitive = true
 }
 
-variable "swc_secret_key" {
+variable "scw_secret_key" {
   type      = string
   sensitive = true
 }
 
-variable "swc_organization_id" {
+variable "scw_organization_id" {
   type      = string
   sensitive = true
 }
