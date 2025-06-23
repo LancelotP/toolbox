@@ -4,6 +4,9 @@ inputs:
   config_directory:
     description: 'The directory containing the Terraform configuration'
     required: true
+  github_token:
+    description: 'The GitHub token to use for the action'
+    required: true
 
 runs:
   using: 'composite'
@@ -34,7 +37,7 @@ runs:
       uses: actions/github-script@v6
       id: plan-comment
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github_token }}
         script: |
           // 1. Retrieve existing bot comments for the PR
           const { data: comments } = await github.rest.issues.listComments({
