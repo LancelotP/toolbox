@@ -1,0 +1,39 @@
+name: Deploy Scaleway Container
+
+inputs:
+  access_key:
+    required: true
+    type: string
+    description: 'The access key of the Scaleway container'
+  secret_key:
+    required: true
+    type: string
+    description: 'The secret key of the Scaleway container'
+  organization_id:
+    required: true
+    type: string
+    description: 'The id of the organization to deploy the container to'
+  project_id:
+    required: true
+    type: string
+    description: 'The id of the project to deploy the container to'
+  container_id:
+    required: true
+    type: string
+    description: 'The id of the container to deploy'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Scaleway CLI
+        uses: scaleway/action-scw@v0
+        with:
+          save-config: true
+          access-key: ${{ inputs.access_key }}
+          secret-key: ${{ inputs.secret_key }}
+          default-project-id: ${{ inputs.project_id }}
+          default-organization-id: ${{ inputs.organization_id }}
+
+    - name: Deploy to Scaleway
+      run: |
+        scw container container deploy ${{ inputs.container_id }}

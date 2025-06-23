@@ -43,12 +43,13 @@ jobs:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: ./.github/workflows/redeploy-container
+      - uses: ./.github/workflows/deploy-container
         with:
-          registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
-          access_key: ${{ secrets.SCW_REGISTRY_TOKEN }}
+          access_key: ${{ secrets.SCW_ACCESS_KEY }}
           secret_key: ${{ secrets.SCW_SECRET_KEY }}
-          image_tag: ${{ inputs.environment }}
+          organization_id: ${{ vars.SCW_ORGANIZATION_ID }}
+          project_id: ${{ vars.SCW_PROJECT_ID }}
+          container_id: ${{ vars.SCW_API_CONTAINER_ID }}
 
   deploy-web:
     needs:

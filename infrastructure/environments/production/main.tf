@@ -52,6 +52,9 @@ module "github_env" {
   web_registry_endpoint = module.scaleway_env.web_registry_endpoint
   scw_access_key        = module.scaleway_env.github_actions_access_key
   scw_secret_key        = module.scaleway_env.github_actions_secret_key
+  scw_organization_id   = module.scaleway_env.github_actions_organization_id
+  scw_project_id        = module.scaleway_env.github_actions_project_id
+  scw_api_container_id  = module.scaleway_env.api_container_id
 
   github_repo = data.tfe_outputs.global.values.repository_name
 }

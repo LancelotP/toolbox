@@ -56,10 +56,10 @@ jobs:
             workspace: production
             path: ./infrastructure/environments/production
             label: Production
-          # - environment: staging
-          #   workspace: staging
-          #   path: ./infrastructure/environments/staging
-          #   label: Staging
+          - environment: development
+            workspace: development
+            path: ./infrastructure/environments/development
+            label: Development
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
