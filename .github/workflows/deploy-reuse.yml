@@ -1,0 +1,60 @@
+name: Deploy Applications
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: 'The environment to deploy to'
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: ./.github/workflows/build-and-push-docker
+        with:
+          registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
+          secret_key: ${{ secrets.SCW_SECRET_KEY }}
+          image_name: toolbox-api
+          image_tag: ${{ inputs.environment }}
+          app_name: api
+
+  build-web:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - run: echo 'Building web development'
+
+  deploy-api:
+    needs:
+      - build-api
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: ./.github/workflows/redeploy-container
+        with:
+          registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
+          access_key: ${{ secrets.SCW_REGISTRY_TOKEN }}
+          secret_key: ${{ secrets.SCW_SECRET_KEY }}
+          image_tag: ${{ inputs.environment }}
+
+  deploy-web:
+    needs:
+      - deploy-api
+      - build-web
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - run: echo 'Deploying web development'

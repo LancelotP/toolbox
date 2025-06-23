@@ -6,47 +6,22 @@ on:
       - main
       - chore/container-api-deployment
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
-  build-api-development:
+  deploy-development:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: tree:0
-          fetch-depth: 0
+    uses: ./.github/workflows/deploy-reuse.yml
+    secrets: inherit
 
-      - uses: ./.github/workflows/build-and-push-docker
-        with:
-          registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
-          secret_key: ${{ secrets.SCW_SECRET_KEY }}
-          image_name: toolbox-api
-          image_tag: development
-          app_name: api
+    with:
+      environment: development
 
-  build-web-development:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - run: echo 'Building web development'
+  deploy-production:
+    if: github.event_name == 'release'
+    uses: ./.github/workflows/deploy-reuse.yml
+    secrets: inherit
 
-  deploy-api-development:
-    needs:
-      - build-api-development
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - run: echo 'Deploying api development'
-
-  deploy-web-development:
-    needs:
-      - deploy-api-development
-      - build-web-development
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - run: echo 'Deploying web development'
+    with:
+      environment: production
