@@ -35,5 +35,6 @@ runs:
         default-organization-id: ${{ inputs.organization_id }}
 
     - name: Deploy to Scaleway
+      shell: bash
       run: |
         scw container container deploy ${{ inputs.container_id }}
