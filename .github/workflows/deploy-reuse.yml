@@ -38,6 +38,7 @@ jobs:
   deploy-api:
     needs:
       - build-api
+      - build-web
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
