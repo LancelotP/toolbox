@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: ./.github/workflows/actions/build-and-push-docker
+      - uses: ./.github/workflows/build-and-push-docker
         with:
           registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
           secret_key: ${{ secrets.SCW_SECRET_KEY }}
