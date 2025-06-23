@@ -26,13 +26,13 @@ runs:
   using: 'composite'
   steps:
     - name: Install Scaleway CLI
-        uses: scaleway/action-scw@v0
-        with:
-          save-config: true
-          access-key: ${{ inputs.access_key }}
-          secret-key: ${{ inputs.secret_key }}
-          default-project-id: ${{ inputs.project_id }}
-          default-organization-id: ${{ inputs.organization_id }}
+      uses: scaleway/action-scw@v0
+      with:
+        save-config: true
+        access-key: ${{ inputs.access_key }}
+        secret-key: ${{ inputs.secret_key }}
+        default-project-id: ${{ inputs.project_id }}
+        default-organization-id: ${{ inputs.organization_id }}
 
     - name: Deploy to Scaleway
       run: |
