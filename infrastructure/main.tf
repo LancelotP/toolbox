@@ -79,8 +79,6 @@ resource "github_repository_ruleset" "default_branch" {
   }
 
   rules {
-    creation         = true
-    update           = true
     deletion         = true
     non_fast_forward = true
   }
