@@ -29,3 +29,18 @@ variable "scw_secret_key" {
   description = "The Scaleway secret key for the environment"
   sensitive   = true
 }
+
+variable "scw_organization_id" {
+  type        = string
+  description = "The Scaleway organization id for the environment"
+}
+
+variable "scw_project_id" {
+  type        = string
+  description = "The Scaleway project id for the environment"
+}
+
+variable "scw_api_container_id" {
+  type        = string
+  description = "The Scaleway api container id for the environment"
+}

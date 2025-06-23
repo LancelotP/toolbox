@@ -1,0 +1,79 @@
+name: Deploy Applications
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: 'The environment to deploy to'
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    outputs:
+      registry_image: ${{ steps.build-and-push-docker.outputs.registry_image }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - id: build-and-push-docker
+        uses: ./.github/workflows/build-and-push-docker
+        with:
+          registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
+          secret_key: ${{ secrets.SCW_SECRET_KEY }}
+          image_name: toolbox-api
+          image_tag: ${{ inputs.environment }}
+          app_name: api
+
+  build-web:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - run: echo 'Building web development'
+
+  deploy-api:
+    needs:
+      - build-api
+      - build-web
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: ./.github/workflows/deploy-container
+        with:
+          access_key: ${{ secrets.SCW_ACCESS_KEY }}
+          secret_key: ${{ secrets.SCW_SECRET_KEY }}
+          organization_id: ${{ vars.SCW_ORGANIZATION_ID }}
+          project_id: ${{ vars.SCW_PROJECT_ID }}
+          container_id: ${{ vars.SCW_API_CONTAINER_ID }}
+          registry_image: ${{ needs.build-api.outputs.registry_image }}
+
+      - name: Wait for container to be ready
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 30
+          shell: bash
+          command: |
+            status=$(scw container container get ${{ vars.SCW_API_CONTAINER_ID }} --output json | jq -r '.status')
+            echo "Container status: $status"
+            [[ "$status" == "ready" ]] && exit 0
+            [[ "$status" =~ ^(error|deleting|locked)$ ]] && echo "❌ Container failed" && exit 2
+            echo "⏳ Still pending..." && exit 1
+
+  deploy-web:
+    needs:
+      - deploy-api
+      - build-web
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - run: echo 'Deploying web development'

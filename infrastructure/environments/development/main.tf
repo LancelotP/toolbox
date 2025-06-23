@@ -15,7 +15,7 @@ terraform {
     organization = "LancelotPOrg"
 
     workspaces {
-      name = "production"
+      name = "development"
     }
   }
 }
@@ -41,13 +41,13 @@ provider "scaleway" {
 module "scaleway_env" {
   source = "../../modules/scaleway_env"
 
-  env_name = "production"
+  env_name = "development"
 }
 
 module "github_env" {
   source = "../../modules/github_env"
 
-  env_name              = "production"
+  env_name              = "development"
   api_registry_endpoint = module.scaleway_env.api_registry_endpoint
   web_registry_endpoint = module.scaleway_env.web_registry_endpoint
   scw_access_key        = module.scaleway_env.github_actions_access_key

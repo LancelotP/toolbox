@@ -1,0 +1,26 @@
+name: Deploy Applications
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
+
+jobs:
+  deploy-development:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/deploy-reuse.yml
+    secrets: inherit
+
+    with:
+      environment: development
+
+  deploy-production:
+    if: github.event_name == 'release'
+    uses: ./.github/workflows/deploy-reuse.yml
+    secrets: inherit
+
+    with:
+      environment: production
