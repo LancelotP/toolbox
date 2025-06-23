@@ -29,10 +29,12 @@ jobs:
         uses: ./.github/workflows/actions/terraform-plan
         with:
           config_directory: ./infrastructure/global
+          workspace: global
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform Plan Production
         uses: ./.github/workflows/actions/terraform-plan
         with:
           config_directory: ./infrastructure/production
+          workspace: production
           github_token: ${{ secrets.GITHUB_TOKEN }}
