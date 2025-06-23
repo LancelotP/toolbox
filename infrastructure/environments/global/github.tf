@@ -10,14 +10,20 @@ terraform {
     organization = "LancelotPOrg"
 
     workspaces {
-      name = "github_workspace"
+      name = "global"
     }
   }
 }
 
+variable "github_access_token" {
+  type        = string
+  description = "GitHub Access Token"
+  sensitive   = true
+}
+
 provider "github" {
   owner = "lancelotp"
-  token = var.GH_TOKEN
+  token = var.github_access_token
 }
 
 resource "github_repository" "this" {
@@ -87,8 +93,12 @@ resource "github_repository_ruleset" "default_branch" {
       strict_required_status_checks_policy = true
 
       required_check {
-        context = "CI"
+        context = "lint-test-build"
       }
     }
   }
+}
+
+output "repository_name" {
+  value = github_repository.this.name
 }
