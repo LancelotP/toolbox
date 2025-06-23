@@ -36,7 +36,7 @@ jobs:
           workspace: global
           label: Global
           variables: |
-            github_access_token = ${{ secrets.GH_PAT_TOKEN }}
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
 
       - name: Terraform Plan Production
         uses: dflook/terraform-plan@v2.1.0
@@ -46,7 +46,7 @@ jobs:
           workspace: production
           label: Production
           variables: |
-            github_access_token = ${{ secrets.GH_PAT_TOKEN }}
-            scw_access_key = ${{ secrets.SCW_ORG_ACCESS_KEY }}
-            scw_secret_key = ${{ secrets.SCW_ORG_SECRET_KEY }}
-            scw_organization_id = ${{ secrets.SCW_ORG_ID }}
+            github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
+            scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
+            scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
