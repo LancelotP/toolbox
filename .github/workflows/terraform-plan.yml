@@ -28,13 +28,13 @@ jobs:
       - name: Terraform Plan Global
         uses: ./.github/workflows/actions/terraform-plan
         with:
-          config_directory: ./infrastructure/global
+          config_directory: ./infrastructure/environments/global
           workspace: global
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform Plan Production
         uses: ./.github/workflows/actions/terraform-plan
         with:
-          config_directory: ./infrastructure/production
+          config_directory: ./infrastructure/environments/production
           workspace: production
           github_token: ${{ secrets.GITHUB_TOKEN }}
