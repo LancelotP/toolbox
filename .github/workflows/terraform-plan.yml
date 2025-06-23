@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'infrastructure/**'
 
 env:
   TF_CLOUD_ORGANIZATION: 'LancelotPOrg'
