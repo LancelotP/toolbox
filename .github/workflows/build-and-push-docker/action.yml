@@ -37,6 +37,7 @@ runs:
         cache: 'pnpm'
 
     - run: pnpm install --frozen-lockfile
+      shell: bash
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -49,6 +50,7 @@ runs:
         password: ${{ inputs.secret_key }}
 
     - name: Build Applications
+      shell: bash
       run: pnpm exec nx build ${{ inputs.app_name }}
 
     - name: Build Docker Image
