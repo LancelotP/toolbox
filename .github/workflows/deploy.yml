@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
       - uses: ./.github/workflows/build-and-push-docker
         with:
           registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
