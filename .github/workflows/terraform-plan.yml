@@ -21,20 +21,25 @@ jobs:
       # so GitHub can check out this repo using the default github.token
       contents: read
       pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TF_API_TOKEN: app.terraform.io=${{ secrets.TF_API_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Terraform Plan Global
-        uses: ./.github/workflows/actions/terraform-plan
+        uses: dflook/terraform-plan@v2.1.0
+
         with:
-          config_directory: ./infrastructure/environments/global
+          path: ./infrastructure/environments/global
           workspace: global
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label: Global
 
       - name: Terraform Plan Production
-        uses: ./.github/workflows/actions/terraform-plan
+        uses: dflook/terraform-plan@v2.1.0
+
         with:
-          config_directory: ./infrastructure/environments/production
+          path: ./infrastructure/environments/production
           workspace: production
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          label: Production
