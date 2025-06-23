@@ -63,5 +63,11 @@ jobs:
       - name: Build Docker Images
         run: pnpm exec nx run-many --target=docker-build
 
+      - name: Debug
+        run: |
+          echo "API_IMAGE_NAME: $API_IMAGE_NAME"
+          echo "WEB_IMAGE_NAME: $WEB_IMAGE_NAME"
+          docker images
+
       - name: Push Docker Images
         run: docker push $API_IMAGE_NAME
