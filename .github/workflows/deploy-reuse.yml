@@ -12,13 +12,16 @@ jobs:
   build-api:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    outputs:
+      registry_image: ${{ steps.build-and-push-docker.outputs.registry_image }}
     steps:
       - uses: actions/checkout@v4
         with:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: ./.github/workflows/build-and-push-docker
+      - id: build-and-push-docker
+        uses: ./.github/workflows/build-and-push-docker
         with:
           registry_endpoint: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}
           secret_key: ${{ secrets.SCW_SECRET_KEY }}
@@ -50,6 +53,7 @@ jobs:
           organization_id: ${{ vars.SCW_ORGANIZATION_ID }}
           project_id: ${{ vars.SCW_PROJECT_ID }}
           container_id: ${{ vars.SCW_API_CONTAINER_ID }}
+          registry_image: ${{ needs.build-api.outputs.registry_image }}
 
   deploy-web:
     needs:

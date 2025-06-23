@@ -25,5 +25,6 @@ output "github_actions_project_id" {
 }
 
 output "api_container_id" {
-  value = scaleway_container.api.id
+  # Scaleway container ids are prefixed with the region
+  value = split("/", scaleway_container.api.id)[1]
 }

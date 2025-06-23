@@ -47,9 +47,19 @@ resource "scaleway_iam_policy" "github_actions" {
 }
 
 resource "scaleway_container" "api" {
-  name           = "toolbox-${local.env_name}-api"
-  namespace_id   = scaleway_container_namespace.api.id
-  registry_image = "${scaleway_container_namespace.api.registry_endpoint}/toolbox-api:${local.env_name}"
+  name         = "toolbox-${local.env_name}-api"
+  namespace_id = scaleway_container_namespace.api.id
+
+  # We ignore those changes because once the first image is deployed those values will change.
+  registry_image = "hub.docker.com/traefik/whoami:latest"
+  deploy         = false
+
+  lifecycle {
+    ignore_changes = [
+      registry_image,
+      deploy
+    ]
+  }
 
   min_scale   = 0
   max_scale   = 1
@@ -62,6 +72,7 @@ resource "scaleway_container" "api" {
     }
   }
 
-  port   = 4000
-  deploy = false
+  cpu_limit    = 100
+  memory_limit = 128
+  port         = 4000
 }
