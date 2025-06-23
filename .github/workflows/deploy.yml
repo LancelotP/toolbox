@@ -1,0 +1,67 @@
+name: Deploy Applications
+
+on:
+  push:
+    branches:
+      - main
+      - chore/container-api-deployment
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10.12.2
+          run_install: false
+
+      - run: pnpm exec nx affected:deploy --base=main~1 --head=HEAD
+
+  deploy-development:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      API_IMAGE_NAME: ${{ vars.SCW_API_REGISTRY_ENDPOINT }}/toolbox-api:${{ github.sha }}
+      WEB_IMAGE_NAME: ${{ vars.SCW_WEB_REGISTRY_ENDPOINT }}/toolbox-web:${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10.12.2
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - uses: nrwl/nx-set-shas@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Login to Docker Registry
+        run: docker login ${{ vars.SCW_API_REGISTRY_ENDPOINT }} -u nologin --password-stdin <<< "${{ secrets.SCW_SECRET_KEY }}"
+
+      - name: Build Docker Images
+        run: pnpm exec nx run-many --target=docker-build
+
+      - name: Push Docker Images
+        run: docker push $API_IMAGE_NAME
