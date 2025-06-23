@@ -10,5 +10,10 @@ on:
 jobs:
   terraform-apply:
     uses: ./.github/workflows/terraform-actions.yml
+
+    permissions:
+      contents: read
+      pull-requests: write
+
     with:
       action: apply
