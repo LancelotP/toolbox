@@ -93,7 +93,7 @@ resource "github_repository_ruleset" "default_branch" {
       strict_required_status_checks_policy = true
 
       required_check {
-        context = "CI"
+        context = "lint-test-build"
       }
     }
   }
