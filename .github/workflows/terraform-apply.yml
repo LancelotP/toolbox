@@ -10,6 +10,7 @@ on:
 jobs:
   terraform-apply:
     uses: ./.github/workflows/terraform-actions.yml
+    secrets: inherit
 
     permissions:
       contents: read
