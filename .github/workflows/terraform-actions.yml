@@ -44,6 +44,9 @@ jobs:
           label: Global
           variables: |
             github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            cloudflare_token = "${{ secrets.CF_API_TOKEN }}"
+            cloudflare_zone_id = "${{ vars.CF_ZONE_ID }}"
+            cloudflare_account_id = "${{ vars.CF_ACCOUNT_ID }}"
 
   terraform-env:
     name: 'Terraform ${{ inputs.action }} - ${{ matrix.environment }}'
