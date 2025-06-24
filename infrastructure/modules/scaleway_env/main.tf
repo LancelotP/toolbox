@@ -69,3 +69,8 @@ resource "scaleway_container" "api" {
   memory_limit = 128
   port         = 4000
 }
+
+resource "scaleway_container_domain" "api" {
+  container_id = scaleway_container.api.id
+  hostname     = var.api_endpoint
+}
