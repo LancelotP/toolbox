@@ -1,20 +1,3 @@
-terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "6.6.0"
-    }
-  }
-
-  cloud {
-    organization = "LancelotPOrg"
-
-    workspaces {
-      name = "global"
-    }
-  }
-}
-
 variable "github_access_token" {
   type        = string
   description = "GitHub Access Token"
