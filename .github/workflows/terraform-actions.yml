@@ -81,6 +81,7 @@ jobs:
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
             scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
+            cloudflare_token = "${{ secrets.CF_API_TOKEN }}"
 
       - name: Terraform Apply ${{ matrix.label }}
         if: inputs.action == 'apply'
@@ -94,3 +95,4 @@ jobs:
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
             scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
+            cloudflare_token = "${{ secrets.CF_API_TOKEN }}"
