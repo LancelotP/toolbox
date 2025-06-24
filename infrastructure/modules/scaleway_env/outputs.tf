@@ -28,3 +28,7 @@ output "api_container_id" {
   # Scaleway container ids are prefixed with the region
   value = split("/", scaleway_container.api.id)[1]
 }
+
+output "api_container_endpoint" {
+  value = scaleway_container.api.domain_name
+}

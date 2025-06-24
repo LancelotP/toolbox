@@ -18,3 +18,9 @@ variable "github_access_token" {
   description = "GitHub Acces Token"
   sensitive   = true
 }
+
+variable "cloudflare_token" {
+  type        = string
+  description = "Cloudflare Token"
+  sensitive   = true
+}
