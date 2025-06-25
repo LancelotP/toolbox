@@ -92,6 +92,7 @@ jobs:
             cf_zone_id = "${{ vars.CF_ZONE_ID }}"
             cf_token = "${{ secrets.CF_API_TOKEN }}"
             developers = {}
+            api_subdomain = "api-dev"
 
       - name: Terraform Apply ${{ matrix.label }}
         if: inputs.action == 'apply'
@@ -110,3 +111,4 @@ jobs:
             cf_zone_id = "${{ vars.CF_ZONE_ID }}"
             cf_token = "${{ secrets.CF_API_TOKEN }}"
             developers = {}
+            api_subdomain = "api-dev"
