@@ -29,7 +29,7 @@ jobs:
         if: inputs.action == 'plan'
         uses: dflook/terraform-plan@v2.1.0
         with:
-          path: ./infrastructure/environments/global
+          path: ./infrastructure/envs/global
           workspace: global
           label: Global
           variables: |
@@ -42,7 +42,7 @@ jobs:
         if: inputs.action == 'apply'
         uses: dflook/terraform-apply@v2.1.0
         with:
-          path: ./infrastructure/environments/global
+          path: ./infrastructure/envs/global
           workspace: global
           label: Global
           variables: |
@@ -58,14 +58,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - environment: production
-            workspace: production
-            path: ./infrastructure/environments/production
-            label: Production
-          - environment: development
-            workspace: development
-            path: ./infrastructure/environments/development
-            label: Development
+          # - environment: production
+          #   workspace: production
+          #   path: ./infrastructure/envs/production
+          #   label: Production
+          - environment: dev
+            workspace: dev
+            path: ./infrastructure/envs/dev
+            label: Dev
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,10 +84,13 @@ jobs:
           label: ${{ matrix.label }}
           variables: |
             github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            github_repo = "${{ github.repository }}"
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
             scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
-            cloudflare_token = "${{ secrets.CF_API_TOKEN }}"
+            cf_zone_id = "${{ vars.CF_ZONE_ID }}"
+            cf_token = "${{ secrets.CF_API_TOKEN }}"
+            developers = {}
 
       - name: Terraform Apply ${{ matrix.label }}
         if: inputs.action == 'apply'
@@ -98,7 +101,10 @@ jobs:
           label: ${{ matrix.label }}
           variables: |
             github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
+            github_repo = "${{ github.repository }}"
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
             scw_organization_id = "${{ secrets.SCW_ORG_ID }}"
-            cloudflare_token = "${{ secrets.CF_API_TOKEN }}"
+            cf_zone_id = "${{ vars.CF_ZONE_ID }}"
+            cf_token = "${{ secrets.CF_API_TOKEN }}"
+            developers = {}
