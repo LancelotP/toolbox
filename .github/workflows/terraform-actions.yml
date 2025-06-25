@@ -84,7 +84,7 @@ jobs:
           label: ${{ matrix.label }}
           variables: |
             github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
-            github_repo = "${{ github.repository }}"
+            github_repo = "toolbox"
             scw_owner_id = "${{ secrets.SCW_OWNER_ID }}"
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
@@ -103,7 +103,7 @@ jobs:
           label: ${{ matrix.label }}
           variables: |
             github_access_token = "${{ secrets.GH_PAT_TOKEN }}"
-            github_repo = "${{ github.repository }}"
+            github_repo = "toolbox"
             scw_owner_id = "${{ secrets.SCW_OWNER_ID }}"
             scw_access_key = "${{ secrets.SCW_ORG_ACCESS_KEY }}"
             scw_secret_key = "${{ secrets.SCW_ORG_SECRET_KEY }}"
